@@ -1,0 +1,254 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+	--bg: #ededea;
+	--surface: #ffffff;
+	--ink: #1f2a24;
+	--ink-muted: #5b6660;
+	--accent: #1f6f4a;
+	--accent-gold: #c9a227;
+	--border: #d8d6cc;
+	--danger: #a6382f;
+}
+
+.login-screen {
+	min-height: 100vh;
+	display: grid;
+	grid-template-columns: 1.1fr 1fr;
+	background: var(--bg);
+	color: var(--ink);
+	font-family: "Inter", sans-serif;
+}
+
+@media (max-width: 860px) {
+	.login-screen {
+		grid-template-columns: 1fr;
+	}
+	.login-brand {
+		display: none;
+	}
+}
+
+/* ---------- brand panel ---------- */
+
+.login-brand {
+	position: relative;
+	background: var(--ink);
+	color: #f2f1ec;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	padding: 3rem;
+}
+
+.ledger-ticker {
+	position: absolute;
+	inset: 0;
+	padding: 3rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+	opacity: 0.5;
+	mask-image: linear-gradient(
+		to bottom,
+		transparent,
+		black 20%,
+		black 70%,
+		transparent
+	);
+}
+
+.ledger-row {
+	display: grid;
+	grid-template-columns: 3.5rem 1fr auto;
+	gap: 1rem;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 0.8rem;
+	color: #f2f1ec;
+	animation: ledger-scroll 16s linear infinite;
+}
+
+.ledger-id {
+	color: var(--accent-gold);
+}
+
+.ledger-mask {
+	letter-spacing: 0.2em;
+	opacity: 0.6;
+}
+
+.ledger-amount {
+	text-align: right;
+	opacity: 0.85;
+}
+
+@keyframes ledger-scroll {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(-120%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ledger-row {
+		animation: none;
+	}
+}
+
+.login-brand-copy {
+	position: relative;
+	z-index: 1;
+	max-width: 26rem;
+}
+
+.login-eyebrow {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 0.75rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--accent-gold);
+}
+
+.login-brand-copy h1 {
+	font-family: "Fraunces", serif;
+	font-weight: 600;
+	font-size: 2.1rem;
+	line-height: 1.2;
+	margin: 0.6rem 0 0.75rem;
+}
+
+.login-brand-copy p {
+	color: #c7cbc4;
+	font-size: 0.95rem;
+	margin: 0;
+}
+
+/* ---------- form panel ---------- */
+
+.login-panel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+}
+
+.login-form {
+	width: 100%;
+	max-width: 22rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.login-form h2 {
+	font-family: "Fraunces", serif;
+	font-weight: 600;
+	font-size: 1.6rem;
+	margin: 0 0 1.5rem;
+}
+
+.login-form label {
+	font-size: 0.82rem;
+	font-weight: 500;
+	color: var(--ink-muted);
+	margin-top: 0.9rem;
+}
+
+.login-form input {
+	font-family: inherit;
+	font-size: 0.95rem;
+	padding: 0.65rem 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: var(--surface);
+	color: var(--ink);
+	margin-top: 0.3rem;
+}
+
+.login-form input:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 1px;
+	border-color: var(--accent);
+}
+
+.login-error {
+	color: var(--danger);
+	font-size: 0.85rem;
+	margin: 0.75rem 0 0;
+}
+
+.login-form button {
+	position: relative;
+	margin-top: 1.75rem;
+	padding: 0.75rem 1rem;
+	font-family: inherit;
+	font-size: 0.95rem;
+	font-weight: 500;
+	color: #f2f1ec;
+	background: var(--accent);
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.login-form button:hover:not(:disabled) {
+	background: #185c3d;
+}
+
+.login-form button:focus-visible {
+	outline: 2px solid var(--accent-gold);
+	outline-offset: 2px;
+}
+
+.login-form button:disabled {
+	cursor: default;
+	opacity: 0.85;
+}
+
+/* signature element: a small stamp mark that "hits" on successful auth */
+.stamp {
+	display: inline-block;
+	width: 0;
+	height: 0;
+}
+
+.stamp-hit::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 0.9rem;
+	width: 1rem;
+	height: 1rem;
+	border: 2px solid var(--accent-gold);
+	border-radius: 50%;
+	transform: translateY(-50%) scale(0.4) rotate(-18deg);
+	opacity: 0;
+	animation: stamp-hit 0.45s ease forwards;
+}
+
+@keyframes stamp-hit {
+	0% {
+		transform: translateY(-50%) scale(0.4) rotate(-18deg);
+		opacity: 0;
+	}
+	60% {
+		transform: translateY(-50%) scale(1.15) rotate(-18deg);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-50%) scale(1) rotate(-18deg);
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.stamp-hit::after {
+		animation: none;
+		opacity: 1;
+		transform: translateY(-50%) scale(1) rotate(-18deg);
+	}
+}

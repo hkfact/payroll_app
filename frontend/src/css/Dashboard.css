@@ -1,0 +1,260 @@
+:root {
+	--bg: #ededea;
+	--surface: #ffffff;
+	--ink: #1f2a24;
+	--ink-muted: #5b6660;
+	--accent: #1f6f4a;
+	--accent-gold: #c9a227;
+	--border: #d8d6cc;
+	--danger: #a6382f;
+}
+
+.dashboard {
+	min-height: 100vh;
+	background: var(--bg);
+	color: var(--ink);
+	font-family: "Inter", sans-serif;
+}
+
+.dashboard-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.5rem 2.5rem;
+	background: var(--ink);
+	color: #f2f1ec;
+}
+
+.dashboard-eyebrow {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 0.7rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--accent-gold);
+}
+
+.dashboard-header h1 {
+	font-family: "Fraunces", serif;
+	font-weight: 600;
+	font-size: 1.5rem;
+	margin: 0.2rem 0 0;
+}
+
+.dashboard-account {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+}
+
+.dashboard-role-badge {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 0.72rem;
+	letter-spacing: 0.05em;
+	text-transform: capitalize;
+	background: rgba(201, 162, 39, 0.18);
+	color: var(--accent-gold);
+	padding: 0.25rem 0.6rem;
+	border-radius: 999px;
+}
+
+.dashboard-email {
+	font-size: 0.85rem;
+	color: #c7cbc4;
+}
+
+.dashboard-account button {
+	font-family: inherit;
+	font-size: 0.82rem;
+	color: #f2f1ec;
+	background: transparent;
+	border: 1px solid #4b564f;
+	border-radius: 6px;
+	padding: 0.4rem 0.8rem;
+	cursor: pointer;
+}
+
+.dashboard-account button:hover {
+	border-color: var(--accent-gold);
+	color: var(--accent-gold);
+}
+
+.dashboard-body {
+	max-width: 64rem;
+	margin: 0 auto;
+	padding: 2.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.panel {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 1.5rem 1.75rem;
+}
+
+.panel h2 {
+	font-family: "Fraunces", serif;
+	font-weight: 600;
+	font-size: 1.15rem;
+	margin: 0 0 1rem;
+}
+
+.panel-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.88rem;
+}
+
+.panel-table th {
+	text-align: left;
+	font-weight: 500;
+	color: var(--ink-muted);
+	font-size: 0.78rem;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	padding: 0.5rem 0.6rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.panel-table td {
+	padding: 0.65rem 0.6rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.panel-table tr:last-child td {
+	border-bottom: none;
+}
+
+.panel-note {
+	margin: 0.9rem 0 0;
+	font-size: 0.78rem;
+	color: var(--ink-muted);
+}
+
+.panel-stat-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 1rem;
+}
+
+.panel-stat {
+	background: var(--bg);
+	border-radius: 8px;
+	padding: 0.9rem 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.panel-stat span {
+	font-size: 0.75rem;
+	color: var(--ink-muted);
+}
+
+.panel-stat strong {
+	font-size: 1.2rem;
+	font-weight: 600;
+}
+
+.dashboard-loading,
+.dashboard-empty {
+	color: var(--ink-muted);
+	font-size: 0.9rem;
+}
+
+.dashboard-error {
+	color: var(--danger);
+	font-size: 0.9rem;
+}
+
+.details-btn {
+	font-family: inherit;
+	font-size: 0.78rem;
+	color: var(--accent);
+	background: transparent;
+	border: 1px solid var(--accent);
+	border-radius: 6px;
+	padding: 0.3rem 0.65rem;
+	cursor: pointer;
+}
+
+.details-btn:hover {
+	background: var(--accent);
+	color: #f2f1ec;
+}
+
+.edit-btn {
+	font-family: inherit;
+	font-size: 0.78rem;
+	color: var(--accent-gold);
+	background: transparent;
+	border: 1px solid var(--accent-gold);
+	border-radius: 6px;
+	padding: 0.3rem 0.65rem;
+	cursor: pointer;
+}
+
+.edit-btn:hover {
+	background: var(--accent-gold);
+	color: #f2f1ec;
+}
+
+.delete-btn {
+	font-family: inherit;
+	font-size: 0.78rem;
+	color: var(--danger);
+	background: transparent;
+	border: 1px solid var(--danger);
+	border-radius: 6px;
+	padding: 0.3rem 0.65rem;
+	cursor: pointer;
+}
+
+.delete-btn:hover {
+	background: var(--danger);
+	color: #f2f1ec;
+}
+
+.details-cell {
+	background: var(--bg);
+	border-bottom: 1px solid var(--border) !important;
+	padding: 1rem 1.25rem !important;
+}
+
+.panel-subtable {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.85rem;
+	margin-bottom: 0.9rem;
+}
+
+.panel-subtable th {
+	text-align: left;
+	font-weight: 500;
+	color: var(--ink-muted);
+	font-size: 0.74rem;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	padding: 0.4rem 0.5rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.panel-subtable td {
+	padding: 0.5rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.details-net-pay {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	padding-top: 0.4rem;
+	font-size: 0.9rem;
+}
+
+.details-net-pay strong {
+	font-size: 1.1rem;
+	color: var(--accent);
+}
