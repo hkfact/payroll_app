@@ -42,6 +42,13 @@ export function getOrganizations() {
 	return request("/orgs");
 }
 
+export function createOrganization(data) {
+	return request("/orgs", {
+		method: "POST",
+		body: JSON.stringify(data),
+	});
+}
+
 export function getUsers() {
 	return request("/users");
 }
