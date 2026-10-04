@@ -5,7 +5,7 @@ async function list(req, res) {
 	try {
 		const { clause, params } = personScope(req);
 		const result = await pool.query(
-			`SELECT * FROM relation WHERE ${clause} ORDER BY id DESC`,
+			`SELECT * FROM criteria WHERE ${clause} ORDER BY id DESC`,
 			params,
 		);
 		res.status(200).json(result.rows);
@@ -20,7 +20,7 @@ async function getById(req, res) {
 		const { id } = req.params;
 		const { clause, params } = personScope(req);
 		const result = await pool.query(
-			`SELECT * FROM relation WHERE id = $${params.length + 1} AND ${clause}`,
+			`SELECT * FROM criteria WHERE id = $${params.length + 1} AND ${clause}`,
 			[...params, id],
 		);
 
@@ -39,21 +39,20 @@ async function getById(req, res) {
 
 async function create(req, res) {
 	try {
-		const { salary_id, name, effect, amount, monthly } = req.body;
+		const { salary_id, name, effect, amount } = req.body;
 		const { clause, params } = personScope(req, "s", "user_id");
 		const result = await pool.query(
-			`INSERT INTO relation (salary_id, user_id, org_id, name, effect, amount, monthly)
-			 SELECT s.id, s.user_id, s.org_id, $2, $3, $4, $5
+			`INSERT INTO criteria (salary_id, user_id, org_id, name, effect, amount)
+			 SELECT s.id, s.user_id, s.org_id, $2, $3, $4
 			 FROM salaries s
 			 WHERE s.id = $1
-			 AND ${clause.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 5}`)}
+			 AND ${clause.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 4}`)}
 			 RETURNING *`,
 			[
 				salary_id,
 				name,
 				Boolean(effect),
 				amount,
-				Boolean(monthly),
 				...params,
 			],
 		);
@@ -73,18 +72,17 @@ async function create(req, res) {
 
 async function update(req, res) {
 	try {
-		const { name, effect, amount, monthly } = req.body;
+		const { name, effect, amount } = req.body;
 		const { clause, params } = personScope(req);
 		const result = await pool.query(
-			`UPDATE relation SET name = $1, effect = $2, amount = $3, monthly = $4
-			 WHERE id = $5
-			 AND ${clause.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 5}`)}
+			`UPDATE criteria SET name = $1, effect = $2, amount = $3
+			 WHERE id = $4
+			 AND ${clause.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 4}`)}
 			 RETURNING *`,
 			[
 				name,
 				Boolean(effect),
 				amount,
-				Boolean(monthly),
 				req.params.id,
 				...params,
 			],
@@ -105,7 +103,7 @@ async function remove(req, res) {
 	try {
 		const { clause, params } = personScope(req);
 		const result = await pool.query(
-			`DELETE FROM relation WHERE id = $${params.length + 1} AND ${clause} RETURNING id`,
+			`DELETE FROM criteria WHERE id = $${params.length + 1} AND ${clause} RETURNING id`,
 			[...params, req.params.id],
 		);
 

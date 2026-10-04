@@ -185,7 +185,24 @@
 	color: #f2f1ec;
 }
 
-.edit-btn {
+.add-btn {
+	font-family: inherit;
+	font-size: 0.78rem;
+	color: var(--accent);
+	background: transparent;
+	border: 1px solid var(--accent);
+	border-radius: 6px;
+	padding: 0.3rem 0.65rem;
+	cursor: pointer;
+}
+
+.add-btn:hover {
+	background: var(--accent);
+	color: #f2f1ec;
+}
+
+.edit-btn,
+.delete-btn {
 	font-family: inherit;
 	font-size: 0.78rem;
 	color: var(--accent-gold);
@@ -202,14 +219,8 @@
 }
 
 .delete-btn {
-	font-family: inherit;
-	font-size: 0.78rem;
 	color: var(--danger);
-	background: transparent;
 	border: 1px solid var(--danger);
-	border-radius: 6px;
-	padding: 0.3rem 0.65rem;
-	cursor: pointer;
 }
 
 .delete-btn:hover {
@@ -221,6 +232,80 @@
 	background: var(--bg);
 	border-bottom: 1px solid var(--border) !important;
 	padding: 1rem 1.25rem !important;
+}
+
+.admin-unassigned {
+	margin-top: 1.5rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--border);
+}
+
+.admin-unassigned h3 {
+	font-family: "Fraunces", serif;
+	font-size: 1rem;
+	margin: 0 0 0.75rem;
+}
+
+.admin-unassigned .panel-table {
+	margin-top: 0.75rem;
+}
+
+.user-create-form {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: 0.75rem;
+	margin: 1rem 0;
+	padding: 1rem;
+	background: var(--bg);
+	border-radius: 8px;
+}
+
+.user-create-form label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	font-size: 0.8rem;
+	color: var(--ink-muted);
+}
+
+.user-create-form input,
+.user-create-form select {
+	min-width: 0;
+	padding: 0.45rem;
+	border: 1px solid var(--border);
+	border-radius: 5px;
+	font: inherit;
+	color: var(--ink);
+	background: var(--surface);
+}
+
+.user-create-form .dashboard-error,
+.user-create-actions {
+	grid-column: 1 / -1;
+}
+
+.user-create-actions,
+.organization-admin-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.organization-admin-list {
+	display: grid;
+	gap: 0.5rem;
+	padding-left: 1.2rem;
+}
+
+.organization-admin-list li {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.organization-admin-actions {
+	flex-wrap: wrap;
 }
 
 .panel-subtable {

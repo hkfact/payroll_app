@@ -4,6 +4,7 @@ import SalaryBreakdown from "./SalaryBreakdown";
 
 export default function Salaries({
 	salaries,
+	readOnly = false,
 	openMonth,
 	breakdowns,
 	breakdownErrors,
@@ -22,20 +23,22 @@ export default function Salaries({
 	if (salaries.length === 0 && !isAdding) {
 		return (
 			<>
-				<button
-					type="button"
-					className="add-btn"
-					onClick={() => {
-						setIsAdding(true);
-						setEditData({
-							month: "",
-							base_amount: "",
-							attendance_counter: "",
-						});
-					}}
-				>
-					+ Add salary
-				</button>
+				{!readOnly && (
+					<button
+						type="button"
+						className="add-btn"
+						onClick={() => {
+							setIsAdding(true);
+							setEditData({
+								month: "",
+								base_amount: "",
+								attendance_counter: "",
+							});
+						}}
+					>
+						+ Add salary
+					</button>
+				)}
 
 				<p className="dashboard-empty">No salary on record yet.</p>
 			</>
@@ -145,16 +148,18 @@ export default function Salaries({
 
 	return (
 		<>
-			<div className="salary-actions">
-				<button
-					type="button"
-					className="add-btn"
-					onClick={handleStartAdd}
-					disabled={isAdding || editingId !== null}
-				>
-					+ Add salary
-				</button>
-			</div>
+			{!readOnly && (
+				<div className="salary-actions">
+					<button
+						type="button"
+						className="add-btn"
+						onClick={handleStartAdd}
+						disabled={isAdding || editingId !== null}
+					>
+						+ Add salary
+					</button>
+				</div>
+			)}
 
 			<table className="panel-table">
 				<thead>
@@ -167,8 +172,8 @@ export default function Salaries({
 						<th>Total</th>
 						<th>Received</th>
 						<th></th>
-						<th></th>
-						<th></th>
+						{!readOnly && <th></th>}
+						{!readOnly && <th></th>}
 					</tr>
 				</thead>
 
@@ -379,7 +384,7 @@ export default function Salaries({
 										</button>
 									</td>
 
-									<td>
+									{!readOnly && <td>
 										{isEditing ? (
 											<button
 												type="button"
@@ -402,9 +407,9 @@ export default function Salaries({
 												Edit
 											</button>
 										)}
-									</td>
+									</td>}
 
-									<td>
+									{!readOnly && <td>
 										{isEditing ? (
 											<button
 												type="button"
@@ -425,13 +430,13 @@ export default function Salaries({
 												Delete
 											</button>
 										)}
-									</td>
+									</td>}
 								</tr>
 
 								{isOpen && (
 									<tr>
 										<td
-											colSpan={9}
+											colSpan={readOnly ? 8 : 10}
 											className="details-cell"
 										>
 											<SalaryBreakdown
@@ -442,6 +447,7 @@ export default function Salaries({
 													breakdownErrors[salary.id]
 												}
 												netPay={salary.net_pay}
+												readOnly={readOnly}
 												onEdit={onBreakdownEdit}
 												onDelete={onBreakdownDelete}
 												onAdd={(item) =>

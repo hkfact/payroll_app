@@ -43,17 +43,6 @@ function BreakdownFields({ data, onChange }) {
 				/>
 			</td>
 
-			<td>
-				<select
-					value={String(Boolean(data.monthly))}
-					onChange={(e) =>
-						onChange("monthly", e.target.value === "true")
-					}
-				>
-					<option value="true">Monthly</option>
-					<option value="false">One-time</option>
-				</select>
-			</td>
 		</>
 	);
 }
@@ -62,6 +51,7 @@ export default function SalaryBreakdown({
 	breakdown,
 	error,
 	netPay,
+	readOnly = false,
 	onEdit,
 	onDelete,
 	onAdd,
@@ -92,7 +82,6 @@ export default function SalaryBreakdown({
 			name: item.name,
 			effect: item.effect,
 			amount: item.amount,
-			monthly: item.monthly,
 		});
 	};
 
@@ -103,7 +92,6 @@ export default function SalaryBreakdown({
 			name: "",
 			effect: true,
 			amount: "",
-			monthly: true,
 		});
 	};
 
@@ -120,7 +108,6 @@ export default function SalaryBreakdown({
 			name: formData.name.trim(),
 			effect: formData.effect,
 			amount: Number(formData.amount),
-			monthly: Boolean(formData.monthly),
 		});
 
 		handleCancel();
@@ -134,7 +121,6 @@ export default function SalaryBreakdown({
 			name: formData.name.trim(),
 			effect: formData.effect,
 			amount: Number(formData.amount),
-			monthly: Boolean(formData.monthly),
 		};
 
 		try {
@@ -142,7 +128,6 @@ export default function SalaryBreakdown({
 				name: updatedItem.name,
 				effect: updatedItem.effect,
 				amount: updatedItem.amount,
-				monthly: updatedItem.monthly,
 			});
 
 			onEdit(savedItem);
@@ -160,16 +145,18 @@ export default function SalaryBreakdown({
 
 	return (
 		<>
-			<div className="salary-actions">
-				<button
-					type="button"
-					className="add-btn"
-					onClick={handleStartAdd}
-					disabled={isAdding || editingId !== null}
-				>
-					+ Add entry
-				</button>
-			</div>
+			{!readOnly && (
+				<div className="salary-actions">
+					<button
+						type="button"
+						className="add-btn"
+						onClick={handleStartAdd}
+						disabled={isAdding || editingId !== null}
+					>
+						+ Add entry
+					</button>
+				</div>
+			)}
 
 			<table className="panel-subtable">
 				<thead>
@@ -177,14 +164,13 @@ export default function SalaryBreakdown({
 						<th>Criterion</th>
 						<th>Type</th>
 						<th>Amount</th>
-						<th>Frequency</th>
-						<th />
-						<th />
+						{!readOnly && <th />}
+						{!readOnly && <th />}
 					</tr>
 				</thead>
 
 				<tbody>
-					{isAdding && (
+					{isAdding && !readOnly && (
 						<tr>
 							<BreakdownFields
 								data={formData}
@@ -225,7 +211,7 @@ export default function SalaryBreakdown({
 											onChange={handleChange}
 										/>
 
-										<td>
+										{!readOnly && <td>
 											<button
 												type="button"
 												className="edit-btn"
@@ -235,9 +221,9 @@ export default function SalaryBreakdown({
 											>
 												Confirm
 											</button>
-										</td>
+										</td>}
 
-										<td>
+										{!readOnly && <td>
 											<button
 												type="button"
 												className="delete-btn"
@@ -245,7 +231,7 @@ export default function SalaryBreakdown({
 											>
 												Cancel
 											</button>
-										</td>
+										</td>}
 									</>
 								) : (
 									<>
@@ -256,13 +242,9 @@ export default function SalaryBreakdown({
 												: "Deduction"}
 										</td>
 										<td>{formatAmount(item)}</td>
-										<td>
-											{item.monthly
-												? "Monthly"
-												: "One-time"}
-										</td>
 
-										<td>
+										{!readOnly && (
+											<td>
 											<button
 												type="button"
 												className="edit-btn"
@@ -271,20 +253,23 @@ export default function SalaryBreakdown({
 											>
 												Edit
 											</button>
-										</td>
+											</td>
+										)}
 
-										<td>
-											<button
-												type="button"
-												className="delete-btn"
-												onClick={() =>
-													handleDelete(item)
-												}
-												disabled={isAdding}
-											>
-												Delete
-											</button>
-										</td>
+										{!readOnly && (
+											<td>
+												<button
+													type="button"
+													className="delete-btn"
+													onClick={() =>
+														handleDelete(item)
+													}
+													disabled={isAdding}
+												>
+													Delete
+												</button>
+											</td>
+										)}
 									</>
 								)}
 							</tr>

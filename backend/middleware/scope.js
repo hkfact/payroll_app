@@ -27,11 +27,4 @@ function personScope(req, alias = "", idColumn = "user_id") {
 	}
 }
 
-// For tables scoped to an ORG only, no per-person ownership (criteria).
-function orgScope(req, alias = "") {
-	const col = alias ? `${alias}.` : "";
-	if (req.user.role === "super_admin") return { clause: "1=1", params: [] };
-	return { clause: `${col}org_id = $1`, params: [req.user.org_id] };
-}
-
-module.exports = { personScope, orgScope };
+module.exports = { personScope };

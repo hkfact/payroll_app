@@ -1,17 +1,11 @@
 const pool = require("../db");
 const { personScope } = require("../middleware/scope");
 
-const salaryTotals = `
-	COALESCE((SELECT SUM(r.amount) FROM relation r WHERE r.salary_id = s.id AND r.effect = true), 0) AS additions,
-	COALESCE((SELECT SUM(r.amount) FROM relation r WHERE r.salary_id = s.id AND r.effect = false), 0) AS deductions,
-	COALESCE(s.net_pay, 0) + COALESCE((SELECT SUM(CASE WHEN r.effect = true THEN r.amount ELSE -r.amount END)
-			FROM relation r WHERE r.salary_id = s.id), 0) AS net_pay`;
-
 async function list(req, res) {
 	try {
 		const { clause, params } = personScope(req);
 		const result = await pool.query(
-			`SELECT s.*, ${salaryTotals}
+			`SELECT s.*
 			 FROM salaries s WHERE ${clause.replace(/\b(user_id|org_id)\b/g, "s.$1")}
 			 ORDER BY s.id DESC`,
 			params,
@@ -35,7 +29,7 @@ async function getById(req, res) {
 		const { id } = req.params;
 		const { clause, params } = personScope(req);
 		const result = await pool.query(
-			`SELECT s.*, ${salaryTotals}
+			`SELECT s.*
 			 FROM salaries s
 			 WHERE s.id = $${params.length + 1}
 			 AND ${clause.replace(/\b(user_id|org_id)\b/g, "s.$1")}`,
@@ -58,22 +52,19 @@ async function getById(req, res) {
 async function getBreakdown(req, res) {
 	try {
 		const salaryId = parseInt(req.params.salaryId, 10);
+		if (!Number.isInteger(salaryId)) {
+			return res.status(400).json({ error: "Invalid salary id" });
+		}
 
-		const { clause, params } = personScope(req, "", "user_id");
+		const { clause, params } = personScope(req, "c");
 
 		const breakdown = (
 			await pool.query(
-				`SELECT * FROM relation
-				 WHERE salary_id = $${params.length + 1} AND ${clause}`,
+				`SELECT c.* FROM criteria c
+				 WHERE c.salary_id = $${params.length + 1} AND ${clause}`,
 				[...params, salaryId],
 			)
 		).rows;
-
-		if (!breakdown) {
-			return res
-				.status(404)
-				.json({ error: "No salary record found for this month" });
-		}
 
 		res.status(200).json(breakdown);
 	} catch (err) {
@@ -114,7 +105,7 @@ async function create(req, res) {
 		}
 
 		const saved = await pool.query(
-			`SELECT s.*, ${salaryTotals} FROM salaries s WHERE s.id = $1`,
+			`SELECT s.* FROM salaries s WHERE s.id = $1`,
 			[result.rows[0].id],
 		);
 		res.status(201).json(saved.rows[0]);
@@ -192,7 +183,7 @@ async function update(req, res) {
 		}
 
 		const saved = await pool.query(
-			`SELECT s.*, ${salaryTotals} FROM salaries s WHERE s.id = $1`,
+			`SELECT s.* FROM salaries s WHERE s.id = $1`,
 			[result.rows[0].id],
 		);
 		return res.status(200).json(saved.rows[0]);

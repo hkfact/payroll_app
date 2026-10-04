@@ -46,6 +46,13 @@ export function getUsers() {
 	return request("/users");
 }
 
+export function createUser(data) {
+	return request("/users", {
+		method: "POST",
+		body: JSON.stringify(data),
+	});
+}
+
 export function getEmployees() {
 	return request("/employees");
 }
@@ -77,23 +84,23 @@ export function deleteSalary(salaryId) {
 }
 
 export function createBreakdown(data) {
-	return request("/relation", {
+	return request("/criteria", {
 		method: "POST",
 		body: JSON.stringify(data),
 	});
 }
 
 export function updateBreakdown(itemId, data) {
-	return request(`/relation/${itemId}`, {
+	return request(`/criteria/${itemId}`, {
 		method: "PATCH",
 		body: JSON.stringify(data),
 	});
 }
 
 export function deleteBreakdown(itemId) {
-	return request(`/relation/${itemId}`, { method: "DELETE" });
+	return request(`/criteria/${itemId}`, { method: "DELETE" });
 }
 
-export function deleteEmployee(employeeId) {
-	return request(`/users/${employeeId}`, { method: "DELETE" });
+export function deleteUser(userId) {
+	return request(`/users/${userId}`, { method: "DELETE" });
 }

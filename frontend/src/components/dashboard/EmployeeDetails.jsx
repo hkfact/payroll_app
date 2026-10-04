@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
 	getSalaries,
@@ -9,11 +9,15 @@ import {
 	createBreakdown,
 	deleteBreakdown,
 } from "../../api/client";
+import { useAuth } from "../../context/AuthContext";
 import Salaries from "../Helper/Salaries";
 import "../../css/Dashboard.css";
 
 export default function EmployeeDetails() {
 	const id = Number(useParams().id);
+	const navigate = useNavigate();
+	const { user: authUser, logout } = useAuth();
+	const isReadOnly = ["admin", "observer"].includes(authUser.role);
 
 	const [user, setUser] = useState(null);
 	const [salaries, setSalaries] = useState([]);
@@ -38,6 +42,11 @@ export default function EmployeeDetails() {
 			.then((data) => setUser(data))
 			.catch((err) => setError(err.message));
 	}, [id]);
+
+	async function handleLogout() {
+		await logout();
+		navigate("/login");
+	}
 
 	async function toggleDetails(salaryId) {
 		if (openMonth === salaryId) {
@@ -178,62 +187,93 @@ export default function EmployeeDetails() {
 	}
 
 	return (
-		<>
-			<section className="panel">
-				<h2>
-					Current salary of {user.full_name} ({user.email})
-				</h2>
+		<div className="dashboard">
+			<header className="dashboard-header">
+				<div>
+					<span className="dashboard-eyebrow">Payroll</span>
+					<h1>Dashboard</h1>
+				</div>
+				<div className="dashboard-account">
+					<span className="dashboard-role-badge">
+						{authUser.role.replace("_", " ")}
+					</span>
+					<span className="dashboard-email">
+						{authUser.email}
+					</span>
+					<button type="button" onClick={handleLogout}>
+						Sign out
+					</button>
+				</div>
+			</header>
 
-				{salaries.length > 0 ? (
-					<div className="panel-stat-grid">
-						<div className="panel-stat">
-							<span>Base pay</span>
-							<strong>
-								$
-								{Number(
-									salaries[0].base_amount,
-								).toLocaleString()}
-							</strong>
+			<main className="dashboard-body">
+				<div style={{ marginTop: "0.25rem" }}>
+					<button
+						className="details-btn"
+						type="button"
+						onClick={() => navigate("/dashboard")}
+					>
+						Back to dashboard
+					</button>
+				</div>
+
+				<section className="panel">
+					<h2>
+						Current salary of {user.full_name} ({user.email})
+					</h2>
+
+					{salaries.length > 0 ? (
+						<div className="panel-stat-grid">
+							<div className="panel-stat">
+								<span>Base pay</span>
+								<strong>
+									$
+									{Number(
+										salaries[0].base_amount,
+									).toLocaleString()}
+								</strong>
+							</div>
+
+							<div className="panel-stat">
+								<span>Month</span>
+								<strong>
+									{new Date(
+										salaries[0].month,
+									).toLocaleDateString()}
+								</strong>
+							</div>
+
+							<div className="panel-stat">
+								<span>Received</span>
+								<strong>
+									{salaries[0].received ? "Yes" : "No"}
+								</strong>
+							</div>
 						</div>
+					) : (
+						<p className="dashboard-empty">No salary record yet.</p>
+					)}
+				</section>
 
-						<div className="panel-stat">
-							<span>Month</span>
-							<strong>
-								{new Date(
-									salaries[0].month,
-								).toLocaleDateString()}
-							</strong>
-						</div>
+				<section className="panel">
+					<h2>Payout by month</h2>
 
-						<div className="panel-stat">
-							<span>Received</span>
-							<strong>
-								{salaries[0].received ? "Yes" : "No"}
-							</strong>
-						</div>
-					</div>
-				) : (
-					<p className="dashboard-empty">No salary record yet.</p>
-				)}
-			</section>
-
-			<section className="panel">
-				<h2>Payout by month</h2>
-
-				<Salaries
-					salaries={salaries}
-					openMonth={openMonth}
-					breakdowns={breakdowns}
-					breakdownErrors={breakdownErrors}
-					onToggle={toggleDetails}
-					onEdit={handleUpdateSalary}
-					onDelete={handleDeleteSalary}
-					onAdd={handleAddSalary}
-					onBreakdownEdit={handleUpdateBreakdown}
-					onBreakdownDelete={handleDeleteBreakdown}
-					onBreakdownAdd={handleAddBreakdown}
-				/>
-			</section>
-		</>
+					<Salaries
+						salaries={salaries}
+						readOnly={isReadOnly}
+						openMonth={openMonth}
+						breakdowns={breakdowns}
+						breakdownErrors={breakdownErrors}
+						onToggle={toggleDetails}
+						onEdit={handleUpdateSalary}
+						onDelete={handleDeleteSalary}
+						onAdd={handleAddSalary}
+						onBreakdownEdit={handleUpdateBreakdown}
+						onBreakdownDelete={handleDeleteBreakdown}
+						onBreakdownAdd={handleAddBreakdown}
+					/>
+				</section>
+			</main>
+		</div>
 	);
 }

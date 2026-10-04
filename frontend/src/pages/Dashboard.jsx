@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import SuperAdminPanel from "../components/dashboard/SuperAdminPanel";
+import AdminPanel from "../components/dashboard/AdminPanel";
 import PeoplePanel from "../components/dashboard/PeoplePanel";
 import ManagerPanel from "../components/dashboard/ManagerPanel";
 import EmployeePanel from "../components/dashboard/EmployeePanel";
-import { deleteEmployee } from "../api/client";
+import { deleteUser } from "../api/client";
 import "../css/Dashboard.css";
 
 export default function Dashboard() {
@@ -37,16 +38,16 @@ export default function Dashboard() {
 			<main className="dashboard-body">
 				{user.role === "super_admin" && <SuperAdminPanel />}
 
-				{/* admin and observer both see everything in their org, read-only for observer,
-				    "view only" for admin (no edit routes exist yet regardless) */}
-				{(user.role === "admin" || user.role === "observer") && (
+				{user.role === "admin" && <AdminPanel />}
+
+				{user.role === "observer" && (
 					<PeoplePanel scopeLabel="your organization" />
 				)}
 
 				{user.role === "manager" && (
 					<ManagerPanel
 						scopeLabel="your team"
-						onFire={(employee) => deleteEmployee(employee.id)}
+						onFire={(employee) => deleteUser(employee.id)}
 					/>
 				)}
 
